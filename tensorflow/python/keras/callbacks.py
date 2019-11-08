@@ -1590,7 +1590,8 @@ class TensorBoard(Callback):
       def get_logdir(self):
         return self.logdir
 
-    writer = DummyWriter(self._log_write_dir)
+    # The projector is written in the train dir (see _log_embeddings)
+    writer = DummyWriter(os.path.join(self._log_write_dir, 'train'))
     projector.visualize_embeddings(writer, config)
 
   def _close_writers(self):
