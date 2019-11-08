@@ -1566,7 +1566,8 @@ class TensorBoard(Callback):
     for layer in self.model.layers:
       if isinstance(layer, embeddings.Embedding):
         embedding = config.embeddings.add()
-        embedding.tensor_name = layer.embeddings.name
+        # This is the name of the tensor where the embeddings are written
+        embedding.tensor_name = layer.name + '/embeddings/.ATTRIBUTES/VARIABLE_VALUE'
 
         if self.embeddings_metadata is not None:
           if isinstance(self.embeddings_metadata, str):
