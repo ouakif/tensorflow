@@ -166,6 +166,31 @@ class Model(network.Network):
   def _set_strategy(self, strategy):
     self._compile_time_distribution_strategy = strategy
 
+  def _track_layers(self, layers):
+      """
+      Overwrite Network._track_layers to get proper naming
+      """
+      for layer_index, layer in enumerate(layers):
+          try:
+              if layer.weights:
+                  # Keep a separate index for layers which have weights. This allows
+                  # users to insert Layers without weights anywhere in the network
+                  # without breaking checkpoints.
+                  # Here we use the layer.name as name instead of a incremented counter
+                  # In a Model, the layer names are always different
+                  self._track_trackable(
+                      layer, name=layer.name,
+                      overwrite=True)
+          except ValueError:
+              # The layer might have weights, but may not be built yet. We just treat
+              # it as layer without weight.
+              pass
+
+          # Even if it doesn't have weights, we should still track everything in
+          # case it has/will have Trackable dependencies.
+          self._track_trackable(
+              layer, name=layer.name, overwrite=True)
+
   def get_weights(self):
     """Retrieves the weights of the model.
 
