@@ -1572,7 +1572,7 @@ class TensorBoard(Callback):
           if isinstance(self.embeddings_metadata, str):
             embedding.metadata_path = self.embeddings_metadata
           else:
-            if layer.name in embedding.metadata_path:
+            if layer.name in self.embeddings_metadata:
               embedding.metadata_path = self.embeddings_metadata.pop(layer.name)
 
     if self.embeddings_metadata:
